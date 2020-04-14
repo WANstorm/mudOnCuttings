@@ -1,4 +1,7 @@
+//FOR LINUX:
 //g++ main.cpp -o borovCalc `pkg-config gtkmm-3.0 --cflags --libs` -g
+//FOR WINDOWS:
+//g++ -std=c++2a -o borovCalc.exe src/main.cpp res/resources.res $(pkg-config gtkmm-3.0 --cflags --libs | sed 's/ -I/ -isystem /g') -mwindows
 
 #include <iostream>
 #include <gtkmm.h>
