@@ -12,7 +12,26 @@ Gtk::Entry* inputTwo = nullptr;
 Gtk::Entry* inputThree = nullptr;
 Gtk::Entry* outputBox = nullptr;
 
-void findPercentage() {
+Gtk::Entry* inputLiqLvlOne = nullptr;
+Gtk::Entry* inputLiqLvlTwo = nullptr;
+Gtk::Entry* outputHumidity = nullptr; 
+
+void calcHumidity() {
+
+
+    Glib::ustring strLiqLvlOne, strLiqLvlTwo;
+
+    strLiqLvlOne = inputLiqLvlOne -> get_text(); 
+    strLiqLvlTwo = inputLiqLvlTwo -> get_text();
+
+    float numLiqLvlOne = std::stod(strLiqLvlOne); 
+    float numLiqLvlTwo = std::stod(strLiqLvlTwo);
+
+    outputHumidity -> set_text(std::to_string((numLiqLvlOne + (numLiqLvlOne * (50 - numLiqLvlTwo)) / numLiqLvlTwo) / (50 - (numLiqLvlOne + (numLiqLvlOne * (50 - numLiqLvlTwo)) / numLiqLvlTwo))));
+
+}
+
+void calcMud() {
 
     Glib::ustring strDenSolute, strDenSolvent, strDenSolution;
 
@@ -20,7 +39,9 @@ void findPercentage() {
     strDenSolvent = inputTwo -> get_text();
     strDenSolution = inputThree -> get_text();
 
-    float denSolute = std::stod(strDenSolute), denSolvent = std::stod(strDenSolvent), denSolution = std::stod(strDenSolution);
+    float denSolute = std::stod(strDenSolute);
+    float denSolvent = std::stod(strDenSolvent);
+    float denSolution = std::stod(strDenSolution);
 
     float volSolute = (denSolution - denSolvent) / (denSolute - denSolvent);
     float volSolvent = 1 - volSolute;
@@ -69,19 +90,28 @@ int main(int argc, char** argv) {
     if (window) {
 
         Gtk::Button* calcButton = nullptr;
+        Gtk::Button* calculateHumidity = nullptr;
+
         refBuilder -> get_widget("calcButton", calcButton);
-
         refBuilder -> get_widget("inputOne", inputOne);
-
         refBuilder -> get_widget("inputTwo", inputTwo);
-
         refBuilder -> get_widget("inputThree", inputThree);
-
         refBuilder -> get_widget("outputBox", outputBox);
+
+        refBuilder -> get_widget("calculateHumidity", calculateHumidity);
+        refBuilder -> get_widget("inputLiqLvlOne", inputLiqLvlOne);
+        refBuilder -> get_widget("inputLiqLvlTwo", inputLiqLvlTwo);
+        refBuilder -> get_widget("outputHumidity", outputHumidity);
 
         if (calcButton) {
 
-            calcButton -> signal_clicked().connect(sigc::ptr_fun(findPercentage));
+            calcButton -> signal_clicked().connect(sigc::ptr_fun(calcMud));
+
+        }
+
+        if (calculateHumidity) {
+
+            calculateHumidity -> signal_clicked().connect(sigc::ptr_fun(calcHumidity));
 
         }
 
@@ -93,5 +123,10 @@ int main(int argc, char** argv) {
     delete inputTwo; 
     delete inputThree; 
     delete outputBox;
+
+    delete inputLiqLvlOne;
+    delete inputLiqLvlOne;
+    delete outputHumidity; 
+
     return 0;
 }
