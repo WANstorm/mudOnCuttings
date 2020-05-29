@@ -18,35 +18,49 @@ Gtk::Entry* outputHumidity = nullptr;
 
 void calcHumidity() {
 
+    try {
 
-    Glib::ustring strLiqLvlOne, strLiqLvlTwo;
+        Glib::ustring strLiqLvlOne, strLiqLvlTwo;
 
-    strLiqLvlOne = inputLiqLvlOne -> get_text(); 
-    strLiqLvlTwo = inputLiqLvlTwo -> get_text();
+        strLiqLvlOne = inputLiqLvlOne -> get_text(); 
+        strLiqLvlTwo = inputLiqLvlTwo -> get_text();
 
-    float numLiqLvlOne = std::stod(strLiqLvlOne); 
-    float numLiqLvlTwo = std::stod(strLiqLvlTwo);
+        float numLiqLvlOne = std::stod(strLiqLvlOne); 
+        float numLiqLvlTwo = std::stod(strLiqLvlTwo);
 
-    outputHumidity -> set_text(std::to_string((numLiqLvlOne + (numLiqLvlOne * (50 - numLiqLvlTwo)) / numLiqLvlTwo) / (50 - (numLiqLvlOne + (numLiqLvlOne * (50 - numLiqLvlTwo)) / numLiqLvlTwo))));
+        outputHumidity -> set_text(std::to_string((numLiqLvlOne + (numLiqLvlOne * (50 - numLiqLvlTwo)) / numLiqLvlTwo) / (50 - (numLiqLvlOne + (numLiqLvlOne * (50 - numLiqLvlTwo)) / numLiqLvlTwo))));
 
+    } catch (...) {
+
+        outputHumidity -> set_text("Enter a value");
+
+    }
 }
 
 void calcMud() {
 
-    Glib::ustring strDenSolute, strDenSolvent, strDenSolution;
+    try {
 
-    strDenSolute = inputOne -> get_text();
-    strDenSolvent = inputTwo -> get_text();
-    strDenSolution = inputThree -> get_text();
+        Glib::ustring strDenSolute, strDenSolvent, strDenSolution;
 
-    float denSolute = std::stod(strDenSolute);
-    float denSolvent = std::stod(strDenSolvent);
-    float denSolution = std::stod(strDenSolution);
+        strDenSolute = inputOne -> get_text();
+        strDenSolvent = inputTwo -> get_text();
+        strDenSolution = inputThree -> get_text();
 
-    float volSolute = (denSolution - denSolvent) / (denSolute - denSolvent);
-    float volSolvent = 1 - volSolute;
+        float denSolute = std::stod(strDenSolute);
+        float denSolvent = std::stod(strDenSolvent);
+        float denSolution = std::stod(strDenSolution);
 
-    outputBox -> set_text(std::to_string(volSolvent / volSolute));
+        float volSolute = (denSolution - denSolvent) / (denSolute - denSolvent);
+        float volSolvent = 1 - volSolute;
+
+        outputBox -> set_text(std::to_string(volSolvent / volSolute));
+
+    } catch(...) {
+
+        outputBox -> set_text("Enter a value");
+
+    }
 
 }
 
@@ -60,25 +74,17 @@ int main(int argc, char** argv) {
 
         refBuilder->add_from_file("../res/gui.glade");
 
-    }
+    } catch (const Glib::FileError& ex) {
 
-        catch(const Glib::FileError& ex) {
         std::cerr << "FileError: " << ex.what() << std::endl;
         return 1;
 
-    }
-
-        catch(const Glib::MarkupError& ex)
-    {
+    } catch (const Glib::MarkupError& ex) {
 
         std::cerr << "MarkupError: " << ex.what() << std::endl;
         return 1;
 
-    }
-
-        catch(const Gtk::BuilderError& ex)
-
-    {
+    } catch(const Gtk::BuilderError& ex) {
 
         std::cerr << "BuilderError: " << ex.what() << std::endl;
         return 1;
